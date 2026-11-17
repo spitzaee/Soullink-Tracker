@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Zugriff nur, wenn man den (gehashten) Run-Code kennt.
+    // Die Liste aller Runs kann niemand abrufen.
+    match /runs/{runId}/{sub}/{docId} {
+      allow read, write: if runId.size() == 64
+                         && (sub == 'links' || sub == 'meta');
+    }
+  }
+}

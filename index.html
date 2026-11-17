@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soul Link Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+    --bg:#14161c; --panel:#1d2029; --panel2:#252935; --line:#323746;
+    --text:#eef0f5; --muted:#9aa1b2; --red:#e3424a; --red2:#b8323a;
+    --blue:#4f8cff; --green:#3ec47c; --amber:#f0b429; --grave:#7c8191;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Rubik,system-ui,sans-serif}
+  body{padding:20px 16px 60px}
+  .wrap{max-width:980px;margin:0 auto}
+  button,input,select{font:inherit;color:inherit}
+  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .logo{width:44px;height:44px;flex:none}
+  h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px}
+  .run{color:var(--muted);font-size:14px;margin-top:2px}
+  .spacer{flex:1}
+  .stats{display:flex;gap:8px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:13px;color:var(--muted)}
+  .stat b{color:var(--text);font-size:16px;margin-right:4px}
+  .btn{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;transition:.15s}
+  .btn:hover:not(:disabled){border-color:#4a5166;background:#2c3140}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.primary{background:var(--red);border-color:var(--red);font-weight:700}
+  .btn.primary:hover:not(:disabled){background:var(--red2);border-color:var(--red2)}
+  .btn.danger{color:#ff8a90}
+  .btn.danger.solid{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+  .btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+
+  .status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:14px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .status.ok .dot{background:var(--green)} .status.warn .dot{background:var(--amber)} .status.err .dot{background:var(--red)}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+  .add h2{margin:0 0 12px;font-size:15px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .add-grid{display:grid;grid-template-columns:1.1fr 1fr auto 1fr;gap:12px;align-items:end}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+  .field input,.field select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;outline:none}
+  .field input:focus,.field select:focus{border-color:var(--blue)}
+  .pcol{display:flex;flex-direction:column;gap:8px}
+  .pname{font-weight:700;font-size:13px}
+  .p1c{color:#ff8a90} .p2c{color:#8fb6ff}
+  .chain{align-self:center;color:var(--muted);padding-top:18px}
+  .add-foot{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .warnmsg{font-size:13px;color:var(--amber)}
+  .ro{font-size:13px;color:var(--amber);margin-top:10px;display:none}
+
+  .toolbar{display:flex;gap:10px;align-items:center;margin:22px 0 12px;flex-wrap:wrap}
+  .tabs{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}
+  .tab{background:none;border:0;padding:7px 14px;border-radius:8px;cursor:pointer;color:var(--muted)}
+  .tab.on{background:var(--panel2);color:var(--text);font-weight:700}
+  .search{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;outline:none}
+  .search:focus{border-color:var(--blue)}
+
+  .list{display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;grid-template-columns:150px 1fr auto 1fr auto;gap:12px;align-items:center}
+  .card.dead{opacity:.72;border-style:dashed}
+  .route{font-weight:700;font-size:15px;word-break:break-word}
+  .route small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:2px}
+  .mon{min-width:0}
+  .mon .nick{font-weight:700;font-size:16px;word-break:break-word}
+  .mon .sp{font-size:12px;color:var(--muted)}
+  .mon .who{font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+  .mon.died .nick{text-decoration:line-through;text-decoration-color:var(--red)}
+  .link-ic{color:var(--muted)}
+  .card.dead .link-ic{color:var(--red)}
+  .actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .empty{color:var(--muted);text-align:center;padding:36px 10px;border:1px dashed var(--line);border-radius:var(--r)}
+  .cause{grid-column:1/-1;font-size:12px;color:var(--grave);margin-top:-4px}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(5,6,10,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+  .modal-bg.open{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;width:100%;max-width:480px}
+  .modal h3{margin:0 0 14px;font-size:18px}
+  .modal .rows{display:flex;flex-direction:column;gap:12px}
+  .modal .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .modal .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+  .modal p{color:var(--muted);margin:0 0 6px;line-height:1.45}
+  .err-inline{color:#ff8a90;font-size:13px;min-height:18px}
+
+  @media (max-width:760px){
+    .add-grid{grid-template-columns:1fr}
+    .chain{display:none}
+    .card{grid-template-columns:1fr auto 1fr}
+    .card .route{grid-column:1/-1}
+    .card .actions{grid-column:1/-1;justify-content:flex-start}
+  }
+
+  .gate{max-width:440px;margin:60px auto 0}
+  .gate h2{margin:0 0 8px;font-size:20px}
+  .gate p{color:var(--muted);line-height:1.5;margin:0 0 14px;font-size:14px}
+  .gate .row{display:flex;gap:8px}
+  .gate .row input{flex:1}
+  .gate .or{color:var(--muted);font-size:13px;margin:14px 0 8px}
+  .codebox{font-family:ui-monospace,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;word-break:break-all;font-size:14px}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" fill="#fff" stroke="#14161c" stroke-width="3"/>
+      <path d="M2 24a22 22 0 0 1 44 0z" fill="#e3424a" stroke="#14161c" stroke-width="3"/>
+      <circle cx="24" cy="24" r="7" fill="#fff" stroke="#14161c" stroke-width="3"/>
+      <circle cx="24" cy="24" r="3" fill="#14161c"/>
+    </svg>
+    <div>
+      <h1>Soul Link Tracker</h1>
+      <div class="run" id="runName">–</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="stats app-only hidden">
+      <div class="stat"><b id="cntAlive">0</b>aktiv</div>
+      <div class="stat"><b id="cntDead">0</b>im Friedhof</div>
+    </div>
+    <button class="btn app-only hidden" id="settingsBtn" title="Spielernamen, Run & Code">⚙ Einstellungen</button>
+  </header>
+
+  <div class="status" id="status"><span class="dot"></span><span id="statusText">Lade …</span></div>
+
+  <!-- Run-Code-Eingabe -->
+  <section class="panel gate hidden" id="gate">
+    <h2>Run-Code eingeben</h2>
+    <p>Der Run-Code ist euer gemeinsames Passwort. Wer denselben Code eingibt, sieht und bearbeitet dieselbe Liste. Der Code wird auf diesem PC gespeichert, ihr müsst ihn also nur einmal eingeben.</p>
+    <form id="gateForm" class="row" autocomplete="off">
+      <div class="field" style="flex:1"><input id="gateInput" placeholder="Run-Code" minlength="8" required></div>
+      <button class="btn primary" type="submit">Öffnen</button>
+    </form>
+    <div class="err-inline" id="gateErr"></div>
+    <div class="or">Noch keinen Code? Erzeuge einen und schick ihn deinem Kollegen:</div>
+    <button class="btn" id="genBtn" type="button">🎲 Neuen Code erzeugen</button>
+  </section>
+
+  <div class="app-only hidden">
+    <section class="panel add">
+      <h2>Neuen Link eintragen</h2>
+      <form id="addForm" autocomplete="off">
+        <div class="add-grid">
+          <div class="field">
+            <label for="fRoute">Route / Ort</label>
+            <input id="fRoute" maxlength="60" placeholder="z. B. Route 3" required>
+          </div>
+          <div class="pcol">
+            <div class="pname p1c" data-p="1">Spieler 1</div>
+            <div class="field"><input id="fN1" maxlength="30" placeholder="Spitzname" required></div>
+            <div class="field"><input id="fS1" maxlength="30" placeholder="Art (optional)"></div>
+          </div>
+          <div class="chain" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+          </div>
+          <div class="pcol">
+            <div class="pname p2c" data-p="2">Spieler 2</div>
+            <div class="field"><input id="fN2" maxlength="30" placeholder="Spitzname" required></div>
+            <div class="field"><input id="fS2" maxlength="30" placeholder="Art (optional)"></div>
+          </div>
+        </div>
+        <div class="add-foot">
+          <button class="btn primary" id="addBtn" type="submit">🔗 Verlinken</button>
+          <span class="warnmsg" id="dupWarn"></span>
+        </div>
+      </form>
+    </section>
+
+    <div class="toolbar">
+      <div class="tabs">
+        <button class="tab on" data-tab="alive">Aktive Links</button>
+        <button class="tab" data-tab="dead">☠ Friedhof</button>
+      </div>
+      <input class="search" id="search" placeholder="Suchen nach Route, Name oder Art …">
+    </div>
+
+    <div class="list" id="list"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
+
+<script type="module">
+// =====================================================================
+//  1) HIER DEINE FIREBASE-KONFIGURATION EINFÜGEN
+//     (Firebase-Konsole → Projekteinstellungen → Deine Apps → Web-App → "Konfiguration")
+// =====================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDbELIGx8cA2W_AYUl7ld5J6gY0D8unBzU",
+  authDomain: "soullink-tracker-7ae59.firebaseapp.com",
+  projectId: "soullink-tracker-7ae59",
+  storageBucket: "soullink-tracker-7ae59.firebasestorage.app",
+  messagingSenderId: "931016545013",
+  appId: "1:931016545013:web:64a895862bc0441b222bbc",
+  measurementId: "G-3NZVKJXQHF"
+};
+// =====================================================================
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, setDoc,
+  onSnapshot, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const $ = s => document.querySelector(s);
+const LINK_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+const CODE_KEY = "soullink-run-code";
+const DEFAULTS = { player1: "Spieler 1", player2: "Spieler 2", runName: "" };
+
+let fs = null, runPath = null, runCode = null;
+let links = [], settings = { ...DEFAULTS };
+let tab = "alive", search = "", busy = false;
+let unsubs = [];
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clean = (s, n = 60) => String(s ?? "").trim().slice(0, n);
+const norm = s => clean(s).toLowerCase().replace(/\s+/g, " ");
+const store = {
+  get(){ try { return localStorage.getItem(CODE_KEY); } catch { return null; } },
+  set(v){ try { localStorage.setItem(CODE_KEY, v); } catch {} },
+  del(){ try { localStorage.removeItem(CODE_KEY); } catch {} }
+};
+
+function setStatus(text, kind){
+  $("#statusText").textContent = text;
+  $("#status").className = "status " + (kind || "");
+}
+function show(appVisible){
+  document.querySelectorAll(".app-only").forEach(el => el.classList.toggle("hidden", !appVisible));
+  $("#gate").classList.toggle("hidden", appVisible);
+}
+
+// Der Run-Code wird gehasht – in der Datenbank steht nur der Hash, nie der Code selbst.
+// (Reines JavaScript, damit es überall gleich funktioniert – auch wenn die Datei lokal geöffnet wird.)
+function hashCode(code){
+  const str = "soullink:" + code.trim();
+  let out = "";
+  for (let seed = 1; seed <= 8; seed++) {
+    let h1 = 0xdeadbeef ^ (seed * 2654435761), h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0; i < str.length; i++) {
+      const ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    out += ((h1 ^ h2) >>> 0).toString(16).padStart(8, "0");
+  }
+  return out; // 64 Hex-Zeichen
+}
+
+function genCode(){
+  const words = ["glumanda","schiggy","bisasam","pikachu","evoli","relaxo","garados","lapras","dratini","mew",
+    "enton","knogga","onix","abra","kokowei","vulpix","myrapla","nebulak","rattfratz","taubsi","zubat","sleima"];
+  const rnd = new Uint32Array(4);
+  if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(rnd);
+  else for (let i = 0; i < 4; i++) rnd[i] = Math.floor(Math.random() * 2 ** 32);
+  const w = [...rnd].slice(0, 3).map(n => words[n % words.length]);
+  return w.join("-") + "-" + (rnd[3] % 9000 + 1000);
+}
+
+async function write(fn){
+  if (!fs || busy) return false;
+  busy = true;
+  try { await fn(); return true; }
+  catch (e) {
+    console.error(e);
+    const code = e && e.code;
+    if (code === "permission-denied") setStatus("Keine Berechtigung – sind die Firestore-Regeln veröffentlicht?", "err");
+    else if (code === "unavailable") setStatus("Offline – Änderung wird gesendet, sobald die Verbindung zurück ist.", "warn");
+    else setStatus("Speichern fehlgeschlagen (" + (code || "Fehler") + ").", "err");
+    return false;
+  } finally { busy = false; }
+}
+const linksCol = () => collection(fs, runPath, "links");
+const linkDoc = id => doc(fs, runPath, "links", id);
+const settingsDoc = () => doc(fs, runPath, "meta", "settings");
+
+// ---------- Rendering ----------
+function renderSettings(){
+  document.querySelectorAll('[data-p="1"]').forEach(el => el.textContent = settings.player1 || "Spieler 1");
+  document.querySelectorAll('[data-p="2"]').forEach(el => el.textContent = settings.player2 || "Spieler 2");
+  $("#runName").textContent = settings.runName || "Gemeinsame Soul-Link-Liste";
+}
+
+function monHTML(m, who, cls, died){
+  return '<div class="mon' + (died ? ' died' : '') + '">' +
+    '<div class="who ' + cls + '">' + esc(who) + (died ? ' ☠' : '') + '</div>' +
+    '<div class="nick">' + esc(m && m.nick || "?") + '</div>' +
+    (m && m.species ? '<div class="sp">' + esc(m.species) + '</div>' : '') +
+  '</div>';
+}
+
+function render(){
+  const alive = links.filter(l => l.status !== "dead");
+  const dead = links.filter(l => l.status === "dead");
+  $("#cntAlive").textContent = alive.length;
+  $("#cntDead").textContent = dead.length;
+
+  let rows = tab === "alive" ? alive : dead;
+  if (search) {
+    const q = search.toLowerCase();
+    rows = rows.filter(l => [l.route, l.p1?.nick, l.p1?.species, l.p2?.nick, l.p2?.species]
+      .some(v => String(v || "").toLowerCase().includes(q)));
+  }
+  const list = $("#list");
+  if (!rows.length) {
+    list.innerHTML = '<div class="empty">' + (search ? "Nichts gefunden." :
+      tab === "alive" ? "Noch keine aktiven Links. Tragt oben euer erstes Pärchen ein!" : "Der Friedhof ist leer – weiter so! 🙏") + '</div>';
+    return;
+  }
+  const p1 = settings.player1 || "Spieler 1", p2 = settings.player2 || "Spieler 2";
+  list.innerHTML = rows.map(l => {
+    const isDead = l.status === "dead";
+    const d1 = isDead && (l.diedWho === "1" || l.diedWho === "both");
+    const d2 = isDead && (l.diedWho === "2" || l.diedWho === "both");
+    const date = l.createdAt ? new Date(l.createdAt).toLocaleDateString("de-AT") : "";
+    const id = esc(l.id);
+    const acts = isDead
+      ? '<button class="btn sm" data-act="revive" data-id="' + id + '">Wiederbeleben</button>' +
+        '<button class="btn sm danger" data-act="delete" data-id="' + id + '">Löschen</button>'
+      : '<button class="btn sm" data-act="edit" data-id="' + id + '">Bearbeiten</button>' +
+        '<button class="btn sm" data-act="die" data-id="' + id + '">☠ Gestorben</button>' +
+        '<button class="btn sm danger" data-act="delete" data-id="' + id + '">Löschen</button>';
+    return '<div class="card' + (isDead ? ' dead' : '') + '">' +
+      '<div class="route">' + esc(l.route) + (date ? '<small>' + esc(date) + '</small>' : '') + '</div>' +
+      monHTML(l.p1, p1, "p1c", d1) +
+      '<div class="link-ic">' + LINK_SVG + '</div>' +
+      monHTML(l.p2, p2, "p2c", d2) +
+      '<div class="actions">' + acts + '</div>' +
+      (isDead && l.cause ? '<div class="cause">Ursache: ' + esc(l.cause) + '</div>' : '') +
+    '</div>';
+  }).join("");
+}
+
+function checkDup(){
+  const r = norm($("#fRoute").value);
+  const hit = r && links.find(l => norm(l.route) === r);
+  $("#dupWarn").textContent = hit
+    ? "⚠ Für „" + hit.route + "“ gibt es schon einen Link" + (hit.status === "dead" ? " (im Friedhof)" : "") + "."
+    : "";
+}
+
+// ---------- Modal ----------
+function openModal(html, onReady){
+  $("#modal").innerHTML = html;
+  $("#modalBg").classList.add("open");
+  const first = $("#modal").querySelector("input,select");
+  if (first) setTimeout(() => first.focus(), 30);
+  const c = $("#modal").querySelector("[data-close]");
+  if (c) c.onclick = closeModal;
+  if (onReady) onReady($("#modal"));
+}
+function closeModal(){ $("#modalBg").classList.remove("open"); $("#modal").innerHTML = ""; }
+$("#modalBg").addEventListener("click", e => { if (e.target.id === "modalBg") closeModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+function field(id, label, val, ph, max = 30, req = false){
+  return '<div class="field"><label for="' + id + '">' + esc(label) + '</label><input id="' + id + '" maxlength="' + max +
+    '" value="' + esc(val || "") + '" placeholder="' + esc(ph || "") + '"' + (req ? " required" : "") + '></div>';
+}
+const FOOT = (label, cls = "primary") => '<div class="foot"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn ' + cls + '" type="submit">' + label + '</button></div>';
+
+function editDialog(l){
+  const p1 = settings.player1 || "Spieler 1", p2 = settings.player2 || "Spieler 2";
+  openModal(
+    '<h3>Link bearbeiten</h3><form id="mForm"><div class="rows">' +
+      field("mRoute", "Route / Ort", l.route, "", 60, true) +
+      '<div class="two">' + field("mN1", p1 + " – Spitzname", l.p1?.nick, "", 30, true) + field("mS1", p1 + " – Art", l.p1?.species, "optional") + '</div>' +
+      '<div class="two">' + field("mN2", p2 + " – Spitzname", l.p2?.nick, "", 30, true) + field("mS2", p2 + " – Art", l.p2?.species, "optional") + '</div>' +
+    '</div>' + FOOT("Speichern") + '</form>',
+    m => m.querySelector("#mForm").onsubmit = async e => {
+      e.preventDefault();
+      const route = clean($("#mRoute").value), n1 = clean($("#mN1").value, 30), n2 = clean($("#mN2").value, 30);
+      if (!route || !n1 || !n2) return;
+      const ok = await write(() => updateDoc(linkDoc(l.id), {
+        route, p1: { nick: n1, species: clean($("#mS1").value, 30) },
+        p2: { nick: n2, species: clean($("#mS2").value, 30) }, updatedAt: Date.now()
+      }));
+      if (ok) closeModal();
+    });
+}
+
+function dieDialog(l){
+  const p1 = settings.player1 || "Spieler 1", p2 = settings.player2 || "Spieler 2";
+  openModal(
+    '<h3>☠ ' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) + '</h3>' +
+    '<p>Der Link von <b>' + esc(l.route) + '</b> wandert in den Friedhof. Ihr könnt ihn dort später endgültig löschen.</p>' +
+    '<form id="mForm"><div class="rows">' +
+      '<div class="field"><label for="mWho">Wer ist gestorben?</label><select id="mWho">' +
+        '<option value="1">' + esc(l.p1?.nick) + ' (' + esc(p1) + ')</option>' +
+        '<option value="2">' + esc(l.p2?.nick) + ' (' + esc(p2) + ')</option>' +
+        '<option value="both">Beide</option></select></div>' +
+      field("mCause", "Ursache (optional)", "", "z. B. Volltreffer vom Arenaleiter", 80) +
+    '</div>' + FOOT("In den Friedhof", "danger solid") + '</form>',
+    m => m.querySelector("#mForm").onsubmit = async e => {
+      e.preventDefault();
+      const ok = await write(() => updateDoc(linkDoc(l.id), {
+        status: "dead", diedWho: $("#mWho").value, cause: clean($("#mCause").value, 80), diedAt: Date.now(), updatedAt: Date.now()
+      }));
+      if (ok) closeModal();
+    });
+}
+
+function deleteDialog(l){
+  openModal(
+    '<h3>Endgültig löschen?</h3><p>Der Link <b>' + esc(l.route) + '</b> (' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) +
+    ') wird für euch beide entfernt. Das lässt sich nicht rückgängig machen.</p>' +
+    '<form id="mForm">' + FOOT("Löschen", "danger solid") + '</form>',
+    m => m.querySelector("#mForm").onsubmit = async e => {
+      e.preventDefault();
+      const ok = await write(() => deleteDoc(linkDoc(l.id)));
+      if (ok) closeModal();
+    });
+}
+
+function settingsDialog(){
+  openModal(
+    '<h3>Einstellungen</h3><form id="mForm"><div class="rows">' +
+      field("mRun", "Name des Runs", settings.runName, "z. B. Platin Soul Link 2026", 60) +
+      '<div class="two">' + field("mP1", "Spieler 1", settings.player1, "", 24) + field("mP2", "Spieler 2", settings.player2, "", 24) + '</div>' +
+      '<div class="field"><label>Euer Run-Code (an deinen Kollegen schicken)</label>' +
+        '<div class="row" style="display:flex;gap:8px"><div class="codebox" style="flex:1" id="mCode"></div>' +
+        '<button type="button" class="btn sm" id="mCopy">Kopieren</button></div></div>' +
+      '<button type="button" class="btn sm danger" id="mLeave" style="align-self:flex-start">Run wechseln / abmelden</button>' +
+    '</div>' + FOOT("Speichern") + '</form>',
+    m => {
+      m.querySelector("#mCode").textContent = runCode;
+      m.querySelector("#mCopy").onclick = async e => {
+        try { await navigator.clipboard.writeText(runCode); e.target.textContent = "Kopiert ✓"; } catch { e.target.textContent = "Bitte manuell kopieren"; }
+      };
+      m.querySelector("#mLeave").onclick = () => { closeModal(); leaveRun(); };
+      m.querySelector("#mForm").onsubmit = async e => {
+        e.preventDefault();
+        const next = {
+          runName: clean($("#mRun").value),
+          player1: clean($("#mP1").value, 24) || "Spieler 1",
+          player2: clean($("#mP2").value, 24) || "Spieler 2"
+        };
+        if (next.runName === settings.runName && next.player1 === settings.player1 && next.player2 === settings.player2) { closeModal(); return; }
+        const ok = await write(() => setDoc(settingsDoc(), next));
+        if (ok) closeModal();
+      };
+    });
+}
+
+// ---------- Events ----------
+$("#settingsBtn").onclick = settingsDialog;
+$("#fRoute").addEventListener("input", checkDup);
+$("#search").addEventListener("input", e => { search = e.target.value.trim(); render(); });
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  tab = t.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
+  render();
+});
+$("#list").addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]");
+  if (!b) return;
+  const l = links.find(x => x.id === b.dataset.id);
+  if (!l) return;
+  const act = b.dataset.act;
+  if (act === "edit") editDialog(l);
+  else if (act === "die") dieDialog(l);
+  else if (act === "delete") deleteDialog(l);
+  else if (act === "revive") write(() => updateDoc(linkDoc(l.id), { status: "alive", diedWho: "", cause: "", updatedAt: Date.now() }));
+});
+$("#addForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const route = clean($("#fRoute").value), n1 = clean($("#fN1").value, 30), n2 = clean($("#fN2").value, 30);
+  if (!route || !n1 || !n2) return;
+  const ok = await write(() => addDoc(linksCol(), {
+    route,
+    p1: { nick: n1, species: clean($("#fS1").value, 30) },
+    p2: { nick: n2, species: clean($("#fS2").value, 30) },
+    status: "alive", createdAt: Date.now(), updatedAt: Date.now()
+  }));
+  if (ok) {
+    ["#fRoute","#fN1","#fS1","#fN2","#fS2"].forEach(s => $(s).value = "");
+    $("#dupWarn").textContent = "";
+    if (tab !== "alive") document.querySelector('.tab[data-tab="alive"]').click();
+    $("#fRoute").focus();
+  }
+});
+$("#genBtn").onclick = () => { $("#gateInput").value = genCode(); $("#gateInput").select(); };
+$("#gateForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("#gateInput").value.trim();
+  if (v.length < 8) { $("#gateErr").textContent = "Mindestens 8 Zeichen."; return; }
+  openRun(v);
+});
+
+// ---------- Run öffnen / verlassen ----------
+function stopListeners(){ unsubs.forEach(u => u()); unsubs = []; }
+
+function leaveRun(){
+  stopListeners();
+  store.del();
+  runCode = runPath = null; links = []; settings = { ...DEFAULTS };
+  renderSettings();
+  $("#gateInput").value = "";
+  show(false);
+  setStatus("Kein Run geöffnet.", "");
+}
+
+async function openRun(code){
+  stopListeners();
+  runCode = code.trim();
+  runPath = "runs/" + hashCode(runCode);
+  store.set(runCode);
+  show(true);
+  setStatus("Verbinde …", "warn");
+  let timer = setTimeout(() => setStatus("Daten noch nicht erreichbar – Verbindung wird weiter versucht …", "warn"), 10000);
+  const clear = () => { if (timer) { clearTimeout(timer); timer = null; } };
+
+  unsubs.push(onSnapshot(query(linksCol(), orderBy("createdAt", "asc")), { includeMetadataChanges: true }, snap => {
+    links = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!snap.metadata.fromCache) { clear(); setStatus("Live synchronisiert – Änderungen erscheinen bei euch beiden sofort.", "ok"); }
+    render(); checkDup();
+  }, err => {
+    clear(); console.error(err);
+    setStatus(err.code === "permission-denied"
+      ? "Zugriff verweigert – bitte die Firestore-Regeln aus der Anleitung veröffentlichen."
+      : "Verbindung zur Datenbank fehlgeschlagen (" + err.code + ").", "err");
+  }));
+  unsubs.push(onSnapshot(settingsDoc(), s => {
+    settings = { ...DEFAULTS, ...(s.exists() ? s.data() : {}) };
+    renderSettings(); render();
+  }, () => {}));
+}
+
+// ---------- Start ----------
+renderSettings();
+if (Object.values(firebaseConfig).some(v => String(v).includes("HIER"))) {
+  setStatus("Firebase ist noch nicht eingerichtet – bitte die Konfiguration oben in index.html eintragen (siehe Anleitung).", "err");
+} else {
+  try {
+    fs = getFirestore(initializeApp(firebaseConfig));
+    const saved = store.get();
+    if (saved) openRun(saved); else { show(false); setStatus("Bitte Run-Code eingeben.", ""); }
+  } catch (e) {
+    console.error(e);
+    setStatus("Firebase-Konfiguration ungültig: " + e.message, "err");
+  }
+}
+</script>
+</body>
+</html>

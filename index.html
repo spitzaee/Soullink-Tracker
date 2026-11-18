@@ -7,121 +7,170 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-    --bg:#14161c; --panel:#1d2029; --panel2:#252935; --line:#323746;
-    --text:#eef0f5; --muted:#9aa1b2; --red:#e3424a; --red2:#b8323a;
-    --blue:#4f8cff; --green:#3ec47c; --amber:#f0b429; --grave:#7c8191;
-    --r:14px;
+  :root{
+    --bg:#121419; --bg2:#171a21; --panel:#1c1f28; --panel2:#242835; --line:#2f3443; --line2:#3d4356;
+    --text:#eef0f5; --muted:#949bad; --dim:#6b7183;
+    --red:#e3424a; --red2:#c2353d; --p1:#ff8a90; --p2:#8fb6ff;
+    --green:#3ec47c; --amber:#f0b429; --grave:#7c8191; --r:14px;
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--text);font-family:Rubik,system-ui,sans-serif}
-  body{padding:20px 16px 60px}
-  .wrap{max-width:980px;margin:0 auto}
+  body{padding:20px 16px 80px;background:
+    radial-gradient(1200px 500px at 50% -200px, rgba(227,66,74,.10), transparent 70%), var(--bg)}
+  .wrap{max-width:1100px;margin:0 auto}
   button,input,select{font:inherit;color:inherit}
-  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-  .logo{width:44px;height:44px;flex:none}
-  h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px}
+  .hidden{display:none !important}
+
+  /* ---------- Header ---------- */
+  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .logo{width:46px;height:46px;flex:none;filter:drop-shadow(0 4px 10px rgba(227,66,74,.35))}
+  h1{margin:0;font-size:27px;font-weight:800;letter-spacing:-.5px}
   .run{color:var(--muted);font-size:14px;margin-top:2px}
   .spacer{flex:1}
-  .stats{display:flex;gap:8px}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:13px;color:var(--muted)}
-  .stat b{color:var(--text);font-size:16px;margin-right:4px}
-  .btn{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;transition:.15s}
-  .btn:hover:not(:disabled){border-color:#4a5166;background:#2c3140}
-  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .parade{display:flex;gap:2px;align-items:flex-end;height:64px}
+  .parade img{width:60px;height:60px;image-rendering:pixelated;animation:bob 2.6s ease-in-out infinite;filter:drop-shadow(0 6px 6px rgba(0,0,0,.4))}
+  .parade img:nth-child(2){animation-delay:.3s} .parade img:nth-child(3){animation-delay:.6s} .parade img:nth-child(4){animation-delay:.9s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .btn{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;transition:background .15s,border-color .15s,transform .1s;white-space:nowrap}
+  .btn:hover:not(:disabled){border-color:var(--line2);background:#2c3140}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
   .btn.primary{background:var(--red);border-color:var(--red);font-weight:700}
   .btn.primary:hover:not(:disabled){background:var(--red2);border-color:var(--red2)}
-  .btn.danger{color:#ff8a90}
-  .btn.danger.solid{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
-  .btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+  .btn.danger{color:var(--p1)}
+  .btn.solid{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+  .btn.sm{padding:5px 9px;font-size:12.5px;border-radius:8px}
+  .btn.icon{padding:5px 8px;font-size:13px;border-radius:8px;line-height:1}
 
-  .status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:14px}
+  .status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:6px 0 16px}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
-  .status.ok .dot{background:var(--green)} .status.warn .dot{background:var(--amber)} .status.err .dot{background:var(--red)}
+  .status.ok .dot{background:var(--green);box-shadow:0 0 0 3px rgba(62,196,124,.15)}
+  .status.warn .dot{background:var(--amber)} .status.err .dot{background:var(--red)}
 
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
-  .add h2{margin:0 0 12px;font-size:15px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-  .add-grid{display:grid;grid-template-columns:1.1fr 1fr auto 1fr;gap:12px;align-items:end}
+  .panel{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:16px}
+  .ptitle{margin:0 0 12px;font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px}
+  .ptitle .count{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:1px 9px;font-size:12px;letter-spacing:0}
+
+  /* ---------- Top row: add form + tally ---------- */
+  .top{display:grid;grid-template-columns:1.55fr 1fr;gap:14px}
   .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-  .field input,.field select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;outline:none}
-  .field input:focus,.field select:focus{border-color:var(--blue)}
-  .pcol{display:flex;flex-direction:column;gap:8px}
-  .pname{font-weight:700;font-size:13px}
-  .p1c{color:#ff8a90} .p2c{color:#8fb6ff}
-  .chain{align-self:center;color:var(--muted);padding-top:18px}
+  .field input,.field select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;outline:none;transition:border-color .15s}
+  .field input:focus,.field select:focus{border-color:#4f8cff}
+  .add-grid{display:grid;grid-template-columns:1fr 1fr auto 1fr;gap:10px;align-items:end}
+  .chain{color:var(--dim);padding-bottom:8px}
   .add-foot{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
-  .warnmsg{font-size:13px;color:var(--amber)}
-  .ro{font-size:13px;color:var(--amber);margin-top:10px;display:none}
+  .hint{font-size:12.5px;color:var(--muted)}
+  .warnmsg{font-size:12.5px;color:var(--amber)}
+  .p1c{color:var(--p1)} .p2c{color:var(--p2)}
 
-  .toolbar{display:flex;gap:10px;align-items:center;margin:22px 0 12px;flex-wrap:wrap}
-  .tabs{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}
-  .tab{background:none;border:0;padding:7px 14px;border-radius:8px;cursor:pointer;color:var(--muted)}
-  .tab.on{background:var(--panel2);color:var(--text);font-weight:700}
-  .search{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;outline:none}
-  .search:focus{border-color:var(--blue)}
+  .tally{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .tp{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-height:112px}
+  .tp-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .tp-name{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tp-num{font-size:26px;font-weight:800;line-height:1}
+  .marks{display:flex;flex-wrap:wrap;gap:6px 10px;min-height:30px;align-items:center;flex:1}
+  .marks svg{height:28px;width:auto}
+  .marks .none{font-size:12px;color:var(--dim)}
+  .tp-btns{display:flex;gap:6px}
+  .tp-btns .btn{flex:1}
+  .lead{font-size:12px;color:var(--muted);margin-top:10px;text-align:center;min-height:16px}
 
-  .list{display:flex;flex-direction:column;gap:10px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;grid-template-columns:150px 1fr auto 1fr auto;gap:12px;align-items:center}
-  .card.dead{opacity:.72;border-style:dashed}
-  .route{font-weight:700;font-size:15px;word-break:break-word}
-  .route small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:2px}
-  .mon{min-width:0}
-  .mon .nick{font-weight:700;font-size:16px;word-break:break-word}
-  .mon .sp{font-size:12px;color:var(--muted)}
-  .mon .who{font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-  .mon.died .nick{text-decoration:line-through;text-decoration-color:var(--red)}
-  .link-ic{color:var(--muted)}
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;gap:10px;align-items:center;margin:18px 0 12px}
+  .search{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;outline:none}
+  .search:focus{border-color:#4f8cff}
+
+  /* ---------- Team / Box ---------- */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .col .list{display:flex;flex-direction:column;gap:8px}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;
+    transition:border-color .15s,transform .15s,box-shadow .15s;animation:pop .25s ease-out}
+  .card:hover{border-color:var(--line2);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  @keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:28px}
+  .route{font-weight:700;font-size:14.5px;word-break:break-word}
+  .date{font-size:11.5px;color:var(--dim)}
+  .card-top .spacer{flex:1}
+  .pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+  .mon{min-width:0;background:var(--bg);border-radius:9px;padding:6px 9px}
+  .mon .who{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mon .nick{font-weight:700;font-size:15px;word-break:break-word}
+  .mon.died .nick{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;color:var(--muted)}
+  .link-ic{color:var(--dim);display:flex}
+  .actions{display:flex;gap:5px;flex-wrap:wrap}
+  .slot-empty{border:1.5px dashed var(--line);border-radius:12px;height:62px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--dim);font-size:13px}
+  .slot-empty svg{opacity:.35}
+  .card.new-in-box{border-color:rgba(240,180,41,.5)}
+  .empty{color:var(--muted);text-align:center;padding:22px 10px;border:1.5px dashed var(--line);border-radius:12px;font-size:13.5px}
+  .empty img{width:72px;height:72px;image-rendering:pixelated;display:block;margin:0 auto 6px;opacity:.9}
+
+  /* ---------- Graveyard ---------- */
+  details.grave{margin-top:14px}
+  details.grave summary{cursor:pointer;list-style:none;user-select:none}
+  details.grave summary::-webkit-details-marker{display:none}
+  details.grave summary .ptitle{margin:0}
+  details.grave summary .chev{transition:transform .2s;display:inline-block}
+  details.grave[open] summary .chev{transform:rotate(90deg)}
+  .grave-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px;margin-top:12px}
+  .card.dead{background:var(--bg2);border-style:dashed}
   .card.dead .link-ic{color:var(--red)}
-  .actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-  .empty{color:var(--muted);text-align:center;padding:36px 10px;border:1px dashed var(--line);border-radius:var(--r)}
-  .cause{grid-column:1/-1;font-size:12px;color:var(--grave);margin-top:-4px}
+  .cause{font-size:12px;color:var(--grave)}
 
-  .modal-bg{position:fixed;inset:0;background:rgba(5,6,10,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+  /* ---------- Modal / toast / gate ---------- */
+  .modal-bg{position:fixed;inset:0;background:rgba(5,6,10,.72);display:none;align-items:center;justify-content:center;padding:16px;z-index:10;backdrop-filter:blur(2px)}
   .modal-bg.open{display:flex}
-  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;width:100%;max-width:480px}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;width:100%;max-width:480px;max-height:90vh;overflow:auto;animation:pop .2s ease-out}
   .modal h3{margin:0 0 14px;font-size:18px}
   .modal .rows{display:flex;flex-direction:column;gap:12px}
   .modal .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .modal .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
   .modal p{color:var(--muted);margin:0 0 6px;line-height:1.45}
-  .err-inline{color:#ff8a90;font-size:13px;min-height:18px}
+  .check{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+  .check input{width:16px;height:16px;accent-color:var(--red)}
+  .pick{display:flex;flex-direction:column;gap:6px}
+  .pick button{text-align:left;display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer}
+  .pick button:hover{border-color:var(--p2)}
+  .pick .r{font-weight:700;min-width:90px}
+  .pick .n{color:var(--muted);font-size:13.5px}
+  .codebox{font-family:ui-monospace,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;word-break:break-all;font-size:14px;flex:1}
+  .err-inline{color:var(--p1);font-size:13px;min-height:18px}
 
-  @media (max-width:760px){
-    .add-grid{grid-template-columns:1fr}
-    .chain{display:none}
-    .card{grid-template-columns:1fr auto 1fr}
-    .card .route{grid-column:1/-1}
-    .card .actions{grid-column:1/-1;justify-content:flex-start}
-  }
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+    background:#2a2f3d;border:1px solid var(--line2);border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:14px;align-items:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);transition:.2s;z-index:20;font-size:14px;max-width:calc(100% - 32px)}
+  .toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
 
-  .gate{max-width:440px;margin:60px auto 0}
+  .gate{max-width:440px;margin:50px auto 0}
   .gate h2{margin:0 0 8px;font-size:20px}
   .gate p{color:var(--muted);line-height:1.5;margin:0 0 14px;font-size:14px}
-  .gate .row{display:flex;gap:8px}
-  .gate .row input{flex:1}
   .gate .or{color:var(--muted);font-size:13px;margin:14px 0 8px}
-  .codebox{font-family:ui-monospace,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;word-break:break-all;font-size:14px}
-  .hidden{display:none !important}
+
+  @media (max-width:900px){
+    .top{grid-template-columns:1fr}
+    .parade{display:none}
+  }
+  @media (max-width:720px){
+    .cols{grid-template-columns:1fr}
+    .add-grid{grid-template-columns:1fr}
+    .chain{display:none}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
-      <circle cx="24" cy="24" r="22" fill="#fff" stroke="#14161c" stroke-width="3"/>
-      <path d="M2 24a22 22 0 0 1 44 0z" fill="#e3424a" stroke="#14161c" stroke-width="3"/>
-      <circle cx="24" cy="24" r="7" fill="#fff" stroke="#14161c" stroke-width="3"/>
-      <circle cx="24" cy="24" r="3" fill="#14161c"/>
+      <circle cx="24" cy="24" r="22" fill="#fff" stroke="#121419" stroke-width="3"/>
+      <path d="M2 24a22 22 0 0 1 44 0z" fill="#e3424a" stroke="#121419" stroke-width="3"/>
+      <circle cx="24" cy="24" r="7" fill="#fff" stroke="#121419" stroke-width="3"/>
+      <circle cx="24" cy="24" r="3" fill="#121419"/>
     </svg>
     <div>
       <h1>Soul Link Tracker</h1>
       <div class="run" id="runName">–</div>
     </div>
     <div class="spacer"></div>
-    <div class="stats app-only hidden">
-      <div class="stat"><b id="cntAlive">0</b>aktiv</div>
-      <div class="stat"><b id="cntDead">0</b>im Friedhof</div>
-    </div>
+    <div class="parade" id="parade" aria-hidden="true"></div>
     <button class="btn app-only hidden" id="settingsBtn" title="Spielernamen, Run & Code">⚙ Einstellungen</button>
   </header>
 
@@ -130,8 +179,8 @@
   <!-- Run-Code-Eingabe -->
   <section class="panel gate hidden" id="gate">
     <h2>Run-Code eingeben</h2>
-    <p>Der Run-Code ist euer gemeinsames Passwort. Wer denselben Code eingibt, sieht und bearbeitet dieselbe Liste. Der Code wird auf diesem PC gespeichert, ihr müsst ihn also nur einmal eingeben.</p>
-    <form id="gateForm" class="row" autocomplete="off">
+    <p>Der Run-Code ist euer gemeinsames Passwort. Wer denselben Code eingibt, sieht und bearbeitet dieselbe Liste. Der Code wird auf diesem PC gespeichert.</p>
+    <form id="gateForm" style="display:flex;gap:8px" autocomplete="off">
       <div class="field" style="flex:1"><input id="gateInput" placeholder="Run-Code" minlength="8" required></div>
       <button class="btn primary" type="submit">Öffnen</button>
     </form>
@@ -140,102 +189,119 @@
     <button class="btn" id="genBtn" type="button">🎲 Neuen Code erzeugen</button>
   </section>
 
-  <div class="app-only hidden">
-    <section class="panel add">
-      <h2>Neuen Link eintragen</h2>
-      <form id="addForm" autocomplete="off">
-        <div class="add-grid">
-          <div class="field">
-            <label for="fRoute">Route / Ort</label>
-            <input id="fRoute" maxlength="60" placeholder="z. B. Route 3" required>
+  <main class="app-only hidden">
+    <div class="top">
+      <section class="panel">
+        <h2 class="ptitle">Neuen Link eintragen</h2>
+        <form id="addForm" autocomplete="off">
+          <div class="add-grid">
+            <div class="field">
+              <label for="fRoute">Route / Ort</label>
+              <input id="fRoute" maxlength="60" placeholder="z. B. Route 3" required>
+            </div>
+            <div class="field">
+              <label for="fN1" class="p1c" data-p="1">Spieler 1</label>
+              <input id="fN1" maxlength="30" placeholder="Spitzname" required>
+            </div>
+            <div class="chain" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+            </div>
+            <div class="field">
+              <label for="fN2" class="p2c" data-p="2">Spieler 2</label>
+              <input id="fN2" maxlength="30" placeholder="Spitzname" required>
+            </div>
           </div>
-          <div class="pcol">
-            <div class="pname p1c" data-p="1">Spieler 1</div>
-            <div class="field"><input id="fN1" maxlength="30" placeholder="Spitzname" required></div>
-            <div class="field"><input id="fS1" maxlength="30" placeholder="Art (optional)"></div>
+          <div class="add-foot">
+            <button class="btn primary" id="addBtn" type="submit">🔗 Verlinken</button>
+            <span class="hint" id="addHint"></span>
+            <span class="warnmsg" id="dupWarn"></span>
           </div>
-          <div class="chain" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
-          </div>
-          <div class="pcol">
-            <div class="pname p2c" data-p="2">Spieler 2</div>
-            <div class="field"><input id="fN2" maxlength="30" placeholder="Spitzname" required></div>
-            <div class="field"><input id="fS2" maxlength="30" placeholder="Art (optional)"></div>
-          </div>
-        </div>
-        <div class="add-foot">
-          <button class="btn primary" id="addBtn" type="submit">🔗 Verlinken</button>
-          <span class="warnmsg" id="dupWarn"></span>
-        </div>
-      </form>
-    </section>
+        </form>
+      </section>
 
-    <div class="toolbar">
-      <div class="tabs">
-        <button class="tab on" data-tab="alive">Aktive Links</button>
-        <button class="tab" data-tab="dead">☠ Friedhof</button>
-      </div>
-      <input class="search" id="search" placeholder="Suchen nach Route, Name oder Art …">
+      <section class="panel">
+        <h2 class="ptitle">Strichliste <span style="text-transform:none;letter-spacing:0;font-weight:400">– wer hat ein Pokémon verloren?</span></h2>
+        <div class="tally" id="tally"></div>
+        <div class="lead" id="lead"></div>
+      </section>
     </div>
 
-    <div class="list" id="list"></div>
-  </div>
+    <div class="toolbar">
+      <input class="search" id="search" placeholder="🔍 Suchen nach Route oder Spitzname …">
+    </div>
+
+    <div class="cols">
+      <section class="panel col">
+        <h2 class="ptitle">Team <span class="count" id="cntTeam">0/6</span></h2>
+        <div class="list" id="teamList"></div>
+      </section>
+      <section class="panel col">
+        <h2 class="ptitle">Box <span class="count" id="cntBox">0</span></h2>
+        <div class="list" id="boxList"></div>
+      </section>
+    </div>
+
+    <details class="panel grave" id="grave">
+      <summary><h2 class="ptitle"><span class="chev">▸</span> ☠ Friedhof <span class="count" id="cntDead">0</span></h2></summary>
+      <div class="grave-list" id="graveList"></div>
+    </details>
+  </main>
 </div>
 
 <div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"><span id="toastText"></span><button class="btn sm" id="toastBtn">Rückgängig</button></div>
 
 <script type="module">
 // =====================================================================
-//  1) HIER DEINE FIREBASE-KONFIGURATION EINFÜGEN
-//     (Firebase-Konsole → Projekteinstellungen → Deine Apps → Web-App → "Konfiguration")
+//  HIER DEINE FIREBASE-KONFIGURATION EINFÜGEN
+//  (denselben Block wie in deiner bisherigen index.html)
 // =====================================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyDbELIGx8cA2W_AYUl7ld5J6gY0D8unBzU",
-  authDomain: "soullink-tracker-7ae59.firebaseapp.com",
-  projectId: "soullink-tracker-7ae59",
-  storageBucket: "soullink-tracker-7ae59.firebasestorage.app",
-  messagingSenderId: "931016545013",
-  appId: "1:931016545013:web:64a895862bc0441b222bbc",
-  measurementId: "G-3NZVKJXQHF"
+  apiKey: "HIER_EINFÜGEN",
+  authDomain: "HIER_EINFÜGEN",
+  projectId: "HIER_EINFÜGEN",
+  storageBucket: "HIER_EINFÜGEN",
+  messagingSenderId: "HIER_EINFÜGEN",
+  appId: "HIER_EINFÜGEN"
 };
 // =====================================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, setDoc,
-  onSnapshot, query, orderBy
+  getFirestore, collection, doc, setDoc, onSnapshot, query, orderBy, writeBatch, increment
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const SPRITES = ["data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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", "data:image/png;base64,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"];
+const TEAM_SIZE = 6;
 const $ = s => document.querySelector(s);
-const LINK_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+const LINK_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+const BALL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h7m6 0h7"/><circle cx="12" cy="12" r="3"/></svg>';
 const CODE_KEY = "soullink-run-code";
 const DEFAULTS = { player1: "Spieler 1", player2: "Spieler 2", runName: "" };
 
 let fs = null, runPath = null, runCode = null;
-let links = [], settings = { ...DEFAULTS };
-let tab = "alive", search = "", busy = false;
-let unsubs = [];
+let links = [], settings = { ...DEFAULTS }, tally = { p1: 0, p2: 0 };
+let search = "", busy = false, unsubs = [];
 
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clean = (s, n = 60) => String(s ?? "").trim().slice(0, n);
 const norm = s => clean(s).toLowerCase().replace(/\s+/g, " ");
+const P = n => (n === 1 ? settings.player1 : settings.player2) || ("Spieler " + n);
 const store = {
   get(){ try { return localStorage.getItem(CODE_KEY); } catch { return null; } },
   set(v){ try { localStorage.setItem(CODE_KEY, v); } catch {} },
   del(){ try { localStorage.removeItem(CODE_KEY); } catch {} }
 };
 
-function setStatus(text, kind){
-  $("#statusText").textContent = text;
-  $("#status").className = "status " + (kind || "");
-}
-function show(appVisible){
-  document.querySelectorAll(".app-only").forEach(el => el.classList.toggle("hidden", !appVisible));
-  $("#gate").classList.toggle("hidden", appVisible);
+$("#parade").innerHTML = SPRITES.map(s => '<img src="' + s + '" alt="">').join("");
+
+function setStatus(text, kind){ $("#statusText").textContent = text; $("#status").className = "status " + (kind || ""); }
+function show(app){
+  document.querySelectorAll(".app-only").forEach(el => el.classList.toggle("hidden", !app));
+  $("#gate").classList.toggle("hidden", app);
 }
 
-// Der Run-Code wird gehasht – in der Datenbank steht nur der Hash, nie der Code selbst.
-// (Reines JavaScript, damit es überall gleich funktioniert – auch wenn die Datei lokal geöffnet wird.)
+// ---------- Run-Code ----------
 function hashCode(code){
   const str = "soullink:" + code.trim();
   let out = "";
@@ -250,24 +316,70 @@ function hashCode(code){
     h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
     out += ((h1 ^ h2) >>> 0).toString(16).padStart(8, "0");
   }
-  return out; // 64 Hex-Zeichen
+  return out;
 }
-
 function genCode(){
   const words = ["glumanda","schiggy","bisasam","pikachu","evoli","relaxo","garados","lapras","dratini","mew",
     "enton","knogga","onix","abra","kokowei","vulpix","myrapla","nebulak","rattfratz","taubsi","zubat","sleima"];
   const rnd = new Uint32Array(4);
   if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(rnd);
   else for (let i = 0; i < 4; i++) rnd[i] = Math.floor(Math.random() * 2 ** 32);
-  const w = [...rnd].slice(0, 3).map(n => words[n % words.length]);
-  return w.join("-") + "-" + (rnd[3] % 9000 + 1000);
+  return [...rnd].slice(0, 3).map(n => words[n % words.length]).join("-") + "-" + (rnd[3] % 9000 + 1000);
 }
 
-async function write(fn){
+const linkRef = id => doc(fs, runPath, "links", id);
+const newLinkId = () => doc(collection(fs, runPath, "links")).id;
+const settingsRef = () => doc(fs, runPath, "meta", "settings");
+const tallyRef = () => doc(fs, runPath, "meta", "tally");
+
+// ---------- Team/Box-Logik ----------
+// Bis zu 6 aktive Links: alle im Team. Ab dem 7. landen neue in der Box.
+const byCreated = (a, b) => (a.createdAt || 0) - (b.createdAt || 0);
+function computeSlots(alive){
+  const res = {};
+  if (alive.length <= TEAM_SIZE) { alive.forEach(l => res[l.id] = "team"); return res; }
+  let n = 0;
+  alive.forEach(l => { if (l.slot === "team" && n < TEAM_SIZE) { res[l.id] = "team"; n++; } });
+  alive.forEach(l => {
+    if (res[l.id]) return;
+    if (!l.slot && n < TEAM_SIZE) { res[l.id] = "team"; n++; } else res[l.id] = "box";
+  });
+  return res;
+}
+function views(){
+  const alive = links.filter(l => l.status !== "dead").sort(byCreated);
+  const slots = computeSlots(alive);
+  return {
+    team: alive.filter(l => slots[l.id] === "team"),
+    box: alive.filter(l => slots[l.id] === "box"),
+    dead: links.filter(l => l.status === "dead").sort((a, b) => (b.diedAt || 0) - (a.diedAt || 0))
+  };
+}
+
+// Änderungen planen → Team/Box-Plätze neu berechnen → alles in EINEM Schreibvorgang speichern
+function plan(){ return links.map(l => ({ ...l, _ch: {} })); }
+function change(item, fields){ Object.assign(item, fields); Object.assign(item._ch, fields); }
+async function commit(next, extra){
   if (!fs || busy) return false;
   busy = true;
-  try { await fn(); return true; }
-  catch (e) {
+  try {
+    const b = writeBatch(fs);
+    const alive = next.filter(l => !l._del && l.status !== "dead").sort(byCreated);
+    const slots = computeSlots(alive);
+    alive.forEach(l => { if (l.slot !== slots[l.id]) change(l, { slot: slots[l.id] }); });
+    for (const l of next) {
+      if (l._del) { b.delete(linkRef(l.id)); continue; }
+      if (l._new) {
+        const { id, _ch, _new, ...data } = l;
+        b.set(linkRef(id), data);
+      } else if (Object.keys(l._ch).length) {
+        b.update(linkRef(l.id), l._ch);
+      }
+    }
+    if (extra) extra(b);
+    await b.commit();
+    return true;
+  } catch (e) {
     console.error(e);
     const code = e && e.code;
     if (code === "permission-denied") setStatus("Keine Berechtigung – sind die Firestore-Regeln veröffentlicht?", "err");
@@ -276,73 +388,123 @@ async function write(fn){
     return false;
   } finally { busy = false; }
 }
-const linksCol = () => collection(fs, runPath, "links");
-const linkDoc = id => doc(fs, runPath, "links", id);
-const settingsDoc = () => doc(fs, runPath, "meta", "settings");
+const strike = (b, key, by) => b.set(tallyRef(), { [key]: increment(by) }, { merge: true });
+
+// ---------- Toast mit Rückgängig ----------
+let toastTimer = null, toastUndo = null;
+function toast(text, undo){
+  $("#toastText").textContent = text;
+  toastUndo = undo;
+  $("#toastBtn").classList.toggle("hidden", !undo);
+  $("#toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $("#toast").classList.remove("show"); toastUndo = null; }, 7000);
+}
+$("#toastBtn").onclick = async () => {
+  const u = toastUndo; toastUndo = null;
+  $("#toast").classList.remove("show");
+  if (u) await u();
+};
 
 // ---------- Rendering ----------
+function marksSVG(n){
+  if (!n) return '<span class="none">Noch keine Striche 👼</span>';
+  const groups = [];
+  for (let left = n; left > 0; left -= 5) {
+    const k = Math.min(5, left);
+    let s = '<svg viewBox="0 0 40 30"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round">';
+    for (let i = 0; i < Math.min(k, 4); i++) s += '<line x1="' + (6 + i * 8) + '" y1="4" x2="' + (6 + i * 8) + '" y2="26"/>';
+    if (k === 5) s += '<line x1="1" y1="22" x2="35" y2="8"/>';
+    groups.push(s + '</g></svg>');
+  }
+  return groups.join("");
+}
+function renderTally(){
+  const t1 = Math.max(0, tally.p1 || 0), t2 = Math.max(0, tally.p2 || 0);
+  $("#tally").innerHTML = [[1, t1, "p1c", "p1"], [2, t2, "p2c", "p2"]].map(([n, v, cls, key]) =>
+    '<div class="tp">' +
+      '<div class="tp-head"><span class="tp-name ' + cls + '">' + esc(P(n)) + '</span><span class="tp-num">' + v + '</span></div>' +
+      '<div class="marks ' + cls + '">' + marksSVG(v) + '</div>' +
+      '<div class="tp-btns"><button class="btn sm" data-tally="' + key + '" data-by="-1"' + (v ? '' : ' disabled') + ' title="Strich entfernen">− Strich</button>' +
+      '<button class="btn sm" data-tally="' + key + '" data-by="1" title="Strich hinzufügen">+ Strich</button></div>' +
+    '</div>').join("");
+  $("#lead").textContent = t1 === t2 ? (t1 ? "Gleichstand – beide gleich schuld 🤝" : "")
+    : (t1 > t2 ? P(1) : P(2)) + " liegt mit " + Math.abs(t1 - t2) + " Strich" + (Math.abs(t1 - t2) === 1 ? "" : "en") + " vorne 💀";
+}
+
 function renderSettings(){
-  document.querySelectorAll('[data-p="1"]').forEach(el => el.textContent = settings.player1 || "Spieler 1");
-  document.querySelectorAll('[data-p="2"]').forEach(el => el.textContent = settings.player2 || "Spieler 2");
+  document.querySelectorAll('[data-p="1"]').forEach(el => el.textContent = P(1));
+  document.querySelectorAll('[data-p="2"]').forEach(el => el.textContent = P(2));
   $("#runName").textContent = settings.runName || "Gemeinsame Soul-Link-Liste";
 }
 
-function monHTML(m, who, cls, died){
-  return '<div class="mon' + (died ? ' died' : '') + '">' +
-    '<div class="who ' + cls + '">' + esc(who) + (died ? ' ☠' : '') + '</div>' +
-    '<div class="nick">' + esc(m && m.nick || "?") + '</div>' +
-    (m && m.species ? '<div class="sp">' + esc(m.species) + '</div>' : '') +
-  '</div>';
+function monHTML(m, n, died){
+  return '<div class="mon' + (died ? ' died' : '') + '"><div class="who ' + (n === 1 ? "p1c" : "p2c") + '">' + esc(P(n)) + (died ? ' ☠' : '') +
+    '</div><div class="nick">' + esc(m && m.nick || "?") + '</div></div>';
+}
+function cardHTML(l, where, ctx){
+  const id = esc(l.id);
+  const date = l.createdAt ? new Date(l.createdAt).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit" }) : "";
+  let acts = "";
+  if (where === "team") {
+    acts = (ctx.canBox ? '<button class="btn sm" data-act="tobox" data-id="' + id + '" title="In die Box verschieben">↓ Box</button>' : '') +
+      '';
+  } else if (where === "box") {
+    acts = (ctx.teamFull
+      ? '<button class="btn sm" data-act="swap" data-id="' + id + '" title="Mit einem Team-Link tauschen">⇄ Tauschen</button>'
+      : '<button class="btn sm" data-act="toteam" data-id="' + id + '">↑ Ins Team</button>') + '';
+  }
+  if (where === "dead") {
+    acts = '<button class="btn sm" data-act="revive" data-id="' + id + '">Wiederbeleben</button>' +
+      '<button class="btn icon danger" data-act="delete" data-id="' + id + '" title="Endgültig löschen">🗑</button>';
+  } else {
+    acts += '<button class="btn icon" data-act="edit" data-id="' + id + '" title="Bearbeiten">✎</button>' +
+      '<button class="btn icon" data-act="die" data-id="' + id + '" title="Gestorben">☠</button>' +
+      '<button class="btn icon danger" data-act="delete" data-id="' + id + '" title="Löschen">🗑</button>';
+  }
+  const d1 = where === "dead" && (l.diedWho === "1" || l.diedWho === "both");
+  const d2 = where === "dead" && (l.diedWho === "2" || l.diedWho === "both");
+  return '<div class="card' + (where === "dead" ? " dead" : "") + (ctx.highlight === l.id ? " new-in-box" : "") + '">' +
+    '<div class="card-top"><span class="route">' + esc(l.route) + '</span><span class="date">' + esc(date) + '</span><span class="spacer"></span>' +
+      '<div class="actions">' + acts + '</div></div>' +
+    '<div class="pair">' + monHTML(l.p1, 1, d1) + '<div class="link-ic">' + LINK_SVG + '</div>' + monHTML(l.p2, 2, d2) + '</div>' +
+    (where === "dead" && l.cause ? '<div class="cause">Ursache: ' + esc(l.cause) + '</div>' : '') + '</div>';
 }
 
+let lastAddedId = null;
 function render(){
-  const alive = links.filter(l => l.status !== "dead");
-  const dead = links.filter(l => l.status === "dead");
-  $("#cntAlive").textContent = alive.length;
-  $("#cntDead").textContent = dead.length;
+  const v = views();
+  const match = l => !search || [l.route, l.p1?.nick, l.p2?.nick].some(x => String(x || "").toLowerCase().includes(search));
+  const teamFull = v.team.length >= TEAM_SIZE;
+  const canBox = v.team.length + v.box.length > TEAM_SIZE;
+  const ctx = { teamFull, canBox, highlight: lastAddedId };
 
-  let rows = tab === "alive" ? alive : dead;
-  if (search) {
-    const q = search.toLowerCase();
-    rows = rows.filter(l => [l.route, l.p1?.nick, l.p1?.species, l.p2?.nick, l.p2?.species]
-      .some(v => String(v || "").toLowerCase().includes(q)));
-  }
-  const list = $("#list");
-  if (!rows.length) {
-    list.innerHTML = '<div class="empty">' + (search ? "Nichts gefunden." :
-      tab === "alive" ? "Noch keine aktiven Links. Tragt oben euer erstes Pärchen ein!" : "Der Friedhof ist leer – weiter so! 🙏") + '</div>';
-    return;
-  }
-  const p1 = settings.player1 || "Spieler 1", p2 = settings.player2 || "Spieler 2";
-  list.innerHTML = rows.map(l => {
-    const isDead = l.status === "dead";
-    const d1 = isDead && (l.diedWho === "1" || l.diedWho === "both");
-    const d2 = isDead && (l.diedWho === "2" || l.diedWho === "both");
-    const date = l.createdAt ? new Date(l.createdAt).toLocaleDateString("de-AT") : "";
-    const id = esc(l.id);
-    const acts = isDead
-      ? '<button class="btn sm" data-act="revive" data-id="' + id + '">Wiederbeleben</button>' +
-        '<button class="btn sm danger" data-act="delete" data-id="' + id + '">Löschen</button>'
-      : '<button class="btn sm" data-act="edit" data-id="' + id + '">Bearbeiten</button>' +
-        '<button class="btn sm" data-act="die" data-id="' + id + '">☠ Gestorben</button>' +
-        '<button class="btn sm danger" data-act="delete" data-id="' + id + '">Löschen</button>';
-    return '<div class="card' + (isDead ? ' dead' : '') + '">' +
-      '<div class="route">' + esc(l.route) + (date ? '<small>' + esc(date) + '</small>' : '') + '</div>' +
-      monHTML(l.p1, p1, "p1c", d1) +
-      '<div class="link-ic">' + LINK_SVG + '</div>' +
-      monHTML(l.p2, p2, "p2c", d2) +
-      '<div class="actions">' + acts + '</div>' +
-      (isDead && l.cause ? '<div class="cause">Ursache: ' + esc(l.cause) + '</div>' : '') +
-    '</div>';
-  }).join("");
+  $("#cntTeam").textContent = v.team.length + "/" + TEAM_SIZE;
+  $("#cntBox").textContent = v.box.length;
+  $("#cntDead").textContent = v.dead.length;
+
+  const team = v.team.filter(match);
+  let th = team.map(l => cardHTML(l, "team", ctx)).join("");
+  if (!search) for (let i = v.team.length; i < TEAM_SIZE; i++) th += '<div class="slot-empty">' + BALL_SVG + 'Freier Platz</div>';
+  else if (!team.length) th = '<div class="empty">Kein Treffer im Team.</div>';
+  $("#teamList").innerHTML = th;
+
+  const box = v.box.filter(match);
+  $("#boxList").innerHTML = box.length ? box.map(l => cardHTML(l, "box", ctx)).join("")
+    : '<div class="empty">' + (search ? "Kein Treffer in der Box." : '<img src="' + SPRITES[2] + '" alt="">Die Box ist leer. Ab dem 7. Link landen neue Pärchen hier.') + '</div>';
+
+  const dead = v.dead.filter(match);
+  $("#graveList").innerHTML = dead.length ? dead.map(l => cardHTML(l, "dead", ctx)).join("")
+    : '<div class="empty">' + (search ? "Kein Treffer im Friedhof." : '<img src="' + SPRITES[0] + '" alt="">Der Friedhof ist leer – weiter so! 🙏') + '</div>';
+
+  $("#addHint").textContent = teamFull ? "Team ist voll → neuer Link kommt in die Box." : "";
+  renderTally();
 }
 
 function checkDup(){
   const r = norm($("#fRoute").value);
   const hit = r && links.find(l => norm(l.route) === r);
-  $("#dupWarn").textContent = hit
-    ? "⚠ Für „" + hit.route + "“ gibt es schon einen Link" + (hit.status === "dead" ? " (im Friedhof)" : "") + "."
-    : "";
+  $("#dupWarn").textContent = hit ? "⚠ Für „" + hit.route + "“ gibt es schon einen Link" + (hit.status === "dead" ? " (im Friedhof)" : "") + "." : "";
 }
 
 // ---------- Modal ----------
@@ -358,74 +520,119 @@ function openModal(html, onReady){
 function closeModal(){ $("#modalBg").classList.remove("open"); $("#modal").innerHTML = ""; }
 $("#modalBg").addEventListener("click", e => { if (e.target.id === "modalBg") closeModal(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
-
-function field(id, label, val, ph, max = 30, req = false){
-  return '<div class="field"><label for="' + id + '">' + esc(label) + '</label><input id="' + id + '" maxlength="' + max +
+function field(id, label, val, ph, max = 30, req = false, cls = ""){
+  return '<div class="field"><label for="' + id + '" class="' + cls + '">' + esc(label) + '</label><input id="' + id + '" maxlength="' + max +
     '" value="' + esc(val || "") + '" placeholder="' + esc(ph || "") + '"' + (req ? " required" : "") + '></div>';
 }
 const FOOT = (label, cls = "primary") => '<div class="foot"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn ' + cls + '" type="submit">' + label + '</button></div>';
 
 function editDialog(l){
-  const p1 = settings.player1 || "Spieler 1", p2 = settings.player2 || "Spieler 2";
-  openModal(
-    '<h3>Link bearbeiten</h3><form id="mForm"><div class="rows">' +
+  openModal('<h3>Link bearbeiten</h3><form id="mForm"><div class="rows">' +
       field("mRoute", "Route / Ort", l.route, "", 60, true) +
-      '<div class="two">' + field("mN1", p1 + " – Spitzname", l.p1?.nick, "", 30, true) + field("mS1", p1 + " – Art", l.p1?.species, "optional") + '</div>' +
-      '<div class="two">' + field("mN2", p2 + " – Spitzname", l.p2?.nick, "", 30, true) + field("mS2", p2 + " – Art", l.p2?.species, "optional") + '</div>' +
+      '<div class="two">' + field("mN1", P(1), l.p1?.nick, "Spitzname", 30, true, "p1c") + field("mN2", P(2), l.p2?.nick, "Spitzname", 30, true, "p2c") + '</div>' +
     '</div>' + FOOT("Speichern") + '</form>',
     m => m.querySelector("#mForm").onsubmit = async e => {
       e.preventDefault();
       const route = clean($("#mRoute").value), n1 = clean($("#mN1").value, 30), n2 = clean($("#mN2").value, 30);
       if (!route || !n1 || !n2) return;
-      const ok = await write(() => updateDoc(linkDoc(l.id), {
-        route, p1: { nick: n1, species: clean($("#mS1").value, 30) },
-        p2: { nick: n2, species: clean($("#mS2").value, 30) }, updatedAt: Date.now()
-      }));
-      if (ok) closeModal();
+      const next = plan(); const it = next.find(x => x.id === l.id);
+      change(it, { route, p1: { nick: n1 }, p2: { nick: n2 }, updatedAt: Date.now() });
+      if (await commit(next)) closeModal();
     });
 }
 
 function dieDialog(l){
-  const p1 = settings.player1 || "Spieler 1", p2 = settings.player2 || "Spieler 2";
-  openModal(
-    '<h3>☠ ' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) + '</h3>' +
-    '<p>Der Link von <b>' + esc(l.route) + '</b> wandert in den Friedhof. Ihr könnt ihn dort später endgültig löschen.</p>' +
+  openModal('<h3>☠ ' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) + '</h3>' +
+    '<p>Der Link von <b>' + esc(l.route) + '</b> wandert in den Friedhof.</p>' +
     '<form id="mForm"><div class="rows">' +
-      '<div class="field"><label for="mWho">Wer ist gestorben?</label><select id="mWho">' +
-        '<option value="1">' + esc(l.p1?.nick) + ' (' + esc(p1) + ')</option>' +
-        '<option value="2">' + esc(l.p2?.nick) + ' (' + esc(p2) + ')</option>' +
+      '<div class="field"><label for="mWho">Wessen Pokémon ist gestorben?</label><select id="mWho">' +
+        '<option value="1">' + esc(l.p1?.nick) + ' (' + esc(P(1)) + ')</option>' +
+        '<option value="2">' + esc(l.p2?.nick) + ' (' + esc(P(2)) + ')</option>' +
         '<option value="both">Beide</option></select></div>' +
+      '<label class="check"><input type="checkbox" id="mStrike" checked> <span id="mStrikeTxt"></span></label>' +
       field("mCause", "Ursache (optional)", "", "z. B. Volltreffer vom Arenaleiter", 80) +
-    '</div>' + FOOT("In den Friedhof", "danger solid") + '</form>',
+    '</div>' + FOOT("In den Friedhof", "solid") + '</form>',
+    m => {
+      const upd = () => {
+        const w = $("#mWho").value;
+        $("#mStrikeTxt").textContent = "Strich für " + (w === "both" ? P(1) + " und " + P(2) : P(+w)) + " vergeben";
+      };
+      $("#mWho").onchange = upd; upd();
+      m.querySelector("#mForm").onsubmit = async e => {
+        e.preventDefault();
+        const who = $("#mWho").value, doStrike = $("#mStrike").checked;
+        const keys = !doStrike ? [] : who === "both" ? ["p1", "p2"] : ["p" + who];
+        const before = { status: l.status || "alive", slot: l.slot || "" };
+        const next = plan(); const it = next.find(x => x.id === l.id);
+        change(it, { status: "dead", diedWho: who, cause: clean($("#mCause").value, 80), struck: keys, diedAt: Date.now(), updatedAt: Date.now() });
+        const ok = await commit(next, b => keys.forEach(k => strike(b, k, 1)));
+        if (!ok) return;
+        closeModal();
+        toast("☠ " + l.p1?.nick + " & " + l.p2?.nick + " im Friedhof" + (keys.length ? " · Strich vergeben" : ""), async () => {
+          const n2 = plan(); const x = n2.find(y => y.id === l.id); if (!x) return;
+          change(x, { status: "alive", diedWho: "", cause: "", struck: [], slot: before.slot, updatedAt: Date.now() });
+          await commit(n2, b => keys.forEach(k => strike(b, k, -1)));
+        });
+      };
+    });
+}
+
+function reviveLink(l){
+  const keys = Array.isArray(l.struck) ? l.struck : [];
+  openModal('<h3>' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) + ' wiederbeleben?</h3>' +
+    '<p>Der Link kommt zurück ins Team (oder in die Box, falls das Team voll ist).</p>' +
+    '<form id="mForm"><div class="rows">' +
+      (keys.length ? '<label class="check"><input type="checkbox" id="mUnstrike" checked> Vergebene Striche wieder abziehen</label>' : '') +
+    '</div>' + FOOT("Wiederbeleben") + '</form>',
     m => m.querySelector("#mForm").onsubmit = async e => {
       e.preventDefault();
-      const ok = await write(() => updateDoc(linkDoc(l.id), {
-        status: "dead", diedWho: $("#mWho").value, cause: clean($("#mCause").value, 80), diedAt: Date.now(), updatedAt: Date.now()
-      }));
-      if (ok) closeModal();
+      const un = keys.length && $("#mUnstrike").checked ? keys : [];
+      const next = plan(); const it = next.find(x => x.id === l.id);
+      change(it, { status: "alive", diedWho: "", cause: "", struck: [], slot: "", updatedAt: Date.now() });
+      if (await commit(next, b => un.forEach(k => strike(b, k, -1)))) closeModal();
     });
 }
 
 function deleteDialog(l){
-  openModal(
-    '<h3>Endgültig löschen?</h3><p>Der Link <b>' + esc(l.route) + '</b> (' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) +
-    ') wird für euch beide entfernt. Das lässt sich nicht rückgängig machen.</p>' +
-    '<form id="mForm">' + FOOT("Löschen", "danger solid") + '</form>',
+  openModal('<h3>Löschen?</h3><p>Der Link <b>' + esc(l.route) + '</b> (' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) +
+    ') wird für euch beide entfernt. Striche in der Strichliste bleiben erhalten.</p>' +
+    '<form id="mForm">' + FOOT("Löschen", "solid") + '</form>',
     m => m.querySelector("#mForm").onsubmit = async e => {
       e.preventDefault();
-      const ok = await write(() => deleteDoc(linkDoc(l.id)));
-      if (ok) closeModal();
+      const backup = { ...l };
+      const next = plan(); next.find(x => x.id === l.id)._del = true;
+      if (!(await commit(next))) return;
+      closeModal();
+      toast("🗑 " + l.route + " gelöscht", async () => {
+        const n2 = plan();
+        const { id, ...data } = backup;
+        n2.push({ id, ...data, _new: true, _ch: {} });
+        await commit(n2);
+      });
     });
 }
 
+function swapDialog(l){
+  const { team } = views();
+  openModal('<h3>⇄ ' + esc(l.p1?.nick) + ' & ' + esc(l.p2?.nick) + ' ins Team holen</h3>' +
+    '<p>Welches Pärchen soll dafür in die Box?</p>' +
+    '<div class="pick">' + team.map(t => '<button type="button" data-swap="' + esc(t.id) + '"><span class="r">' + esc(t.route) + '</span>' +
+      '<span class="n"><span class="p1c">' + esc(t.p1?.nick) + '</span> & <span class="p2c">' + esc(t.p2?.nick) + '</span></span></button>').join("") + '</div>' +
+    '<div class="foot"><button type="button" class="btn" data-close>Abbrechen</button></div>',
+    m => m.querySelectorAll("[data-swap]").forEach(btn => btn.onclick = async () => {
+      const next = plan();
+      change(next.find(x => x.id === l.id), { slot: "team" });
+      change(next.find(x => x.id === btn.dataset.swap), { slot: "box" });
+      if (await commit(next)) { closeModal(); toast("⇄ Getauscht"); }
+    }));
+}
+
 function settingsDialog(){
-  openModal(
-    '<h3>Einstellungen</h3><form id="mForm"><div class="rows">' +
-      field("mRun", "Name des Runs", settings.runName, "z. B. Platin Soul Link 2026", 60) +
-      '<div class="two">' + field("mP1", "Spieler 1", settings.player1, "", 24) + field("mP2", "Spieler 2", settings.player2, "", 24) + '</div>' +
+  openModal('<h3>Einstellungen</h3><form id="mForm"><div class="rows">' +
+      field("mRun", "Name des Runs", settings.runName, "z. B. Infinite Fusion Soul Link", 60) +
+      '<div class="two">' + field("mP1", "Spieler 1", settings.player1, "", 24, false, "p1c") + field("mP2", "Spieler 2", settings.player2, "", 24, false, "p2c") + '</div>' +
       '<div class="field"><label>Euer Run-Code (an deinen Kollegen schicken)</label>' +
-        '<div class="row" style="display:flex;gap:8px"><div class="codebox" style="flex:1" id="mCode"></div>' +
-        '<button type="button" class="btn sm" id="mCopy">Kopieren</button></div></div>' +
+        '<div style="display:flex;gap:8px"><div class="codebox" id="mCode"></div><button type="button" class="btn sm" id="mCopy">Kopieren</button></div></div>' +
       '<button type="button" class="btn sm danger" id="mLeave" style="align-self:flex-start">Run wechseln / abmelden</button>' +
     '</div>' + FOOT("Speichern") + '</form>',
     m => {
@@ -436,14 +643,9 @@ function settingsDialog(){
       m.querySelector("#mLeave").onclick = () => { closeModal(); leaveRun(); };
       m.querySelector("#mForm").onsubmit = async e => {
         e.preventDefault();
-        const next = {
-          runName: clean($("#mRun").value),
-          player1: clean($("#mP1").value, 24) || "Spieler 1",
-          player2: clean($("#mP2").value, 24) || "Spieler 2"
-        };
+        const next = { runName: clean($("#mRun").value), player1: clean($("#mP1").value, 24) || "Spieler 1", player2: clean($("#mP2").value, 24) || "Spieler 2" };
         if (next.runName === settings.runName && next.player1 === settings.player1 && next.player2 === settings.player2) { closeModal(); return; }
-        const ok = await write(() => setDoc(settingsDoc(), next));
-        if (ok) closeModal();
+        try { await setDoc(settingsRef(), next); closeModal(); } catch (err) { setStatus("Speichern fehlgeschlagen (" + err.code + ").", "err"); }
       };
     });
 }
@@ -451,13 +653,16 @@ function settingsDialog(){
 // ---------- Events ----------
 $("#settingsBtn").onclick = settingsDialog;
 $("#fRoute").addEventListener("input", checkDup);
-$("#search").addEventListener("input", e => { search = e.target.value.trim(); render(); });
-document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
-  tab = t.dataset.tab;
-  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
-  render();
-});
-$("#list").addEventListener("click", e => {
+$("#search").addEventListener("input", e => { search = e.target.value.trim().toLowerCase(); render(); });
+document.addEventListener("click", async e => {
+  const t = e.target.closest("button[data-tally]");
+  if (t && !t.disabled && fs) {
+    const by = +t.dataset.by;
+    t.disabled = true;
+    try { await setDoc(tallyRef(), { [t.dataset.tally]: increment(by) }, { merge: true }); }
+    catch (err) { setStatus("Speichern fehlgeschlagen (" + err.code + ").", "err"); }
+    return;
+  }
   const b = e.target.closest("button[data-act]");
   if (!b) return;
   const l = links.find(x => x.id === b.dataset.id);
@@ -466,22 +671,26 @@ $("#list").addEventListener("click", e => {
   if (act === "edit") editDialog(l);
   else if (act === "die") dieDialog(l);
   else if (act === "delete") deleteDialog(l);
-  else if (act === "revive") write(() => updateDoc(linkDoc(l.id), { status: "alive", diedWho: "", cause: "", updatedAt: Date.now() }));
+  else if (act === "revive") reviveLink(l);
+  else if (act === "swap") swapDialog(l);
+  else if (act === "toteam" || act === "tobox") {
+    const next = plan();
+    change(next.find(x => x.id === l.id), { slot: act === "toteam" ? "team" : "box" });
+    await commit(next);
+  }
 });
 $("#addForm").addEventListener("submit", async e => {
   e.preventDefault();
   const route = clean($("#fRoute").value), n1 = clean($("#fN1").value, 30), n2 = clean($("#fN2").value, 30);
   if (!route || !n1 || !n2) return;
-  const ok = await write(() => addDoc(linksCol(), {
-    route,
-    p1: { nick: n1, species: clean($("#fS1").value, 30) },
-    p2: { nick: n2, species: clean($("#fS2").value, 30) },
-    status: "alive", createdAt: Date.now(), updatedAt: Date.now()
-  }));
-  if (ok) {
-    ["#fRoute","#fN1","#fS1","#fN2","#fS2"].forEach(s => $(s).value = "");
+  const id = newLinkId();
+  const next = plan();
+  next.push({ id, route, p1: { nick: n1 }, p2: { nick: n2 }, status: "alive", createdAt: Date.now(), updatedAt: Date.now(), _new: true, _ch: {} });
+  if (await commit(next)) {
+    ["#fRoute", "#fN1", "#fN2"].forEach(s => $(s).value = "");
     $("#dupWarn").textContent = "";
-    if (tab !== "alive") document.querySelector('.tab[data-tab="alive"]').click();
+    const inBox = views().box.some(x => x.id === id);
+    if (inBox) { lastAddedId = id; toast("Team ist voll – " + n1 + " & " + n2 + " liegen in der Box. Über „⇄ Tauschen“ ins Team holen."); render(); setTimeout(() => { lastAddedId = null; render(); }, 8000); }
     $("#fRoute").focus();
   }
 });
@@ -495,18 +704,12 @@ $("#gateForm").addEventListener("submit", e => {
 
 // ---------- Run öffnen / verlassen ----------
 function stopListeners(){ unsubs.forEach(u => u()); unsubs = []; }
-
 function leaveRun(){
-  stopListeners();
-  store.del();
-  runCode = runPath = null; links = []; settings = { ...DEFAULTS };
-  renderSettings();
-  $("#gateInput").value = "";
-  show(false);
-  setStatus("Kein Run geöffnet.", "");
+  stopListeners(); store.del();
+  runCode = runPath = null; links = []; settings = { ...DEFAULTS }; tally = { p1: 0, p2: 0 };
+  renderSettings(); $("#gateInput").value = ""; show(false); setStatus("Kein Run geöffnet.", "");
 }
-
-async function openRun(code){
+function openRun(code){
   stopListeners();
   runCode = code.trim();
   runPath = "runs/" + hashCode(runCode);
@@ -515,36 +718,28 @@ async function openRun(code){
   setStatus("Verbinde …", "warn");
   let timer = setTimeout(() => setStatus("Daten noch nicht erreichbar – Verbindung wird weiter versucht …", "warn"), 10000);
   const clear = () => { if (timer) { clearTimeout(timer); timer = null; } };
-
-  unsubs.push(onSnapshot(query(linksCol(), orderBy("createdAt", "asc")), { includeMetadataChanges: true }, snap => {
+  unsubs.push(onSnapshot(query(collection(fs, runPath, "links"), orderBy("createdAt", "asc")), { includeMetadataChanges: true }, snap => {
     links = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     if (!snap.metadata.fromCache) { clear(); setStatus("Live synchronisiert – Änderungen erscheinen bei euch beiden sofort.", "ok"); }
     render(); checkDup();
   }, err => {
     clear(); console.error(err);
-    setStatus(err.code === "permission-denied"
-      ? "Zugriff verweigert – bitte die Firestore-Regeln aus der Anleitung veröffentlichen."
-      : "Verbindung zur Datenbank fehlgeschlagen (" + err.code + ").", "err");
+    setStatus(err.code === "permission-denied" ? "Zugriff verweigert – bitte die Firestore-Regeln veröffentlichen." : "Verbindung zur Datenbank fehlgeschlagen (" + err.code + ").", "err");
   }));
-  unsubs.push(onSnapshot(settingsDoc(), s => {
-    settings = { ...DEFAULTS, ...(s.exists() ? s.data() : {}) };
-    renderSettings(); render();
-  }, () => {}));
+  unsubs.push(onSnapshot(settingsRef(), s => { settings = { ...DEFAULTS, ...(s.exists() ? s.data() : {}) }; renderSettings(); render(); }, () => {}));
+  unsubs.push(onSnapshot(tallyRef(), s => { tally = { p1: 0, p2: 0, ...(s.exists() ? s.data() : {}) }; renderTally(); }, () => {}));
 }
 
 // ---------- Start ----------
 renderSettings();
 if (Object.values(firebaseConfig).some(v => String(v).includes("HIER"))) {
-  setStatus("Firebase ist noch nicht eingerichtet – bitte die Konfiguration oben in index.html eintragen (siehe Anleitung).", "err");
+  setStatus("Firebase ist noch nicht eingerichtet – bitte die Konfiguration oben in index.html eintragen.", "err");
 } else {
   try {
     fs = getFirestore(initializeApp(firebaseConfig));
     const saved = store.get();
     if (saved) openRun(saved); else { show(false); setStatus("Bitte Run-Code eingeben.", ""); }
-  } catch (e) {
-    console.error(e);
-    setStatus("Firebase-Konfiguration ungültig: " + e.message, "err");
-  }
+  } catch (e) { console.error(e); setStatus("Firebase-Konfiguration ungültig: " + e.message, "err"); }
 }
 </script>
 </body>
